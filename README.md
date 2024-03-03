@@ -17,6 +17,7 @@ tergo <command> [arguments]
 - `touch <filename>`: Create a new file with the specified filename.
 - `ls`: List all files and folders in the current directory.
 - `curl <url>`: Perform a GET request to the specified URL and display the response body.
+- `neofetch` :  Show system information.
 
 ### Examples
 - To create a new file:
