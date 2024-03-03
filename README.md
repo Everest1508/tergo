@@ -32,3 +32,11 @@ tergo ls
 - To perform a GET request:
 
 tergo curl https://example.com/api/data
+
+## Contributing
+
+Thank you for your interest in contributing to this project! While I am currently the sole contributor, I welcome contributions from the community in the future. If you have ideas, suggestions, or would like to contribute code, feel free to open an issue or pull request.
+
+Contributions of all kinds, including bug fixes, feature enhancements, and documentation improvements, are appreciated.
+
+Thank you for considering contributing to this project!
