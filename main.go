@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 )
 
 func main() {
@@ -15,6 +18,8 @@ func main() {
 		fmt.Println("  touch <filename>: Create a new file")
 		fmt.Println("  ls: List all files and folders in the current directory")
 		fmt.Println("  curl <url>: Perform a GET request to the specified URL")
+		fmt.Println("")
+		fmt.Println("Author : Ritesh Mahale")
 		return
 	}
 
@@ -39,6 +44,9 @@ func main() {
 			fmt.Println("Error:", err)
 			return
 		}
+	case "neofetch":
+		printSystemInfo()
+
 	case "curl":
 		if len(os.Args) != 3 {
 			fmt.Println("Usage: tergo curl <url>")
@@ -117,4 +125,48 @@ func performCurl(url string) error {
 
 	fmt.Println(string(body))
 	return nil
+}
+
+func printSystemInfo() {
+	fmt.Println("System Information:")
+	fmt.Println("Operating System:", runtime.GOOS)
+	fmt.Println("Architecture:", runtime.GOARCH)
+	fmt.Println("Number of CPUs:", runtime.NumCPU())
+	fmt.Println("GOROOT:", runtime.GOROOT())
+	fmt.Println("GOPATH:", os.Getenv("GOPATH"))
+
+	printNetworkInfo()
+}
+func printNetworkInfo() {
+	fmt.Println("\nNetwork Information:")
+	fmt.Println("Hostname:", getHostname())
+	fmt.Println("IP Addresses:", getIPAddresses())
+}
+
+func getHostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "Unknown"
+	}
+	return hostname
+}
+
+func getIPAddresses() string {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "Unknown"
+	}
+
+	var ips []string
+	for _, addr := range addrs {
+		ip := addr.String()
+		if strings.Contains(ip, ".") { // Filter IPv4 addresses
+			ips = append(ips, ip)
+		}
+	}
+
+	if len(ips) == 0 {
+		return "Unknown"
+	}
+	return strings.Join(ips, ", ")
 }
