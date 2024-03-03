@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 )
@@ -12,6 +14,7 @@ func main() {
 		fmt.Println("Commands:")
 		fmt.Println("  touch <filename>: Create a new file")
 		fmt.Println("  ls: List all files and folders in the current directory")
+		fmt.Println("  curl <url>: Perform a GET request to the specified URL")
 		return
 	}
 
@@ -32,6 +35,17 @@ func main() {
 		fmt.Println("File", filename, "created successfully")
 	case "ls":
 		err := listFiles()
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+	case "curl":
+		if len(os.Args) != 3 {
+			fmt.Println("Usage: tergo curl <url>")
+			return
+		}
+		url := os.Args[2]
+		err := performCurl(url)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
@@ -86,5 +100,21 @@ func listFiles() error {
 	}
 	fmt.Println()
 
+	return nil
+}
+
+func performCurl(url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(body))
 	return nil
 }
